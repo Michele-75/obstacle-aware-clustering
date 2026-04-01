@@ -28,7 +28,7 @@ Thumbs.db
 
 # Data (large files — keep raw data local, not in repo)
 # Uncomment if data files are too large for GitHub:
- data/raw/
+data/raw/
 
 
 # ArcGIS
