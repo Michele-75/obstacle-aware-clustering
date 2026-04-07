@@ -42,9 +42,9 @@ class ObstacleKMeans:
     n_attr : int
         Number of attribute features (default 0, inferred from data).
 
-    Attributes
+    Attributes (n_features = number of features per data point)
     ----------
-    centroids_ : ndarray of shape (k, d)
+    centroids_ : ndarray of shape (k, n_features)
         Final cluster centroids after fitting.
     labels_ : ndarray of shape (n_samples,)
         Cluster assignment for each data point.
@@ -81,7 +81,7 @@ class ObstacleKMeans:
 
         Parameters
         ----------
-        X : ndarray of shape (n_samples, d)
+        X : ndarray of shape (n_samples, n_features)
             Data matrix. Expected layout: [x, y, s, attr_1, attr_2, ...]
         t_data : ndarray of shape (n_samples,), optional
             Parameter values from boundary projection. Required for
@@ -94,11 +94,11 @@ class ObstacleKMeans:
         if self.random_state is not None:
             np.random.seed(self.random_state)
 
-        n_samples, d = X.shape
+        n_samples, n_features = X.shape
         self.t_data_ = t_data
 
         # Infer attribute count
-        n_attr = self.n_attr if self.n_attr > 0 else max(0, d - 3)
+        n_attr = self.n_attr if self.n_attr > 0 else max(0, n_features - 3)
 
         # Step 1: Initialize centroids with k-means++
         centroids = self._init_centroids_pp(X, n_attr)
@@ -142,8 +142,8 @@ class ObstacleKMeans:
         are selected with probability proportional to squared distance
         from the nearest existing centroid.
         """
-        n_samples, d = X.shape
-        centroids = np.zeros((self.k, d))
+        n_samples, n_features = X.shape
+        centroids = np.zeros((self.k, n_features))
 
         # First centroid: random
         centroids[0] = X[np.random.randint(n_samples)]
@@ -187,7 +187,7 @@ class ObstacleKMeans:
         - (x, y) and attribute components: standard mean
         - s component: boundary-aware projection via the Boundary object
         """
-        d = X.shape[1]
+        n_features = X.shape[1]
         new_centroids = np.zeros_like(old_centroids)
 
         for i in range(self.k):
@@ -204,14 +204,14 @@ class ObstacleKMeans:
             new_centroids[i, :2] = np.mean(cluster_data[:, :2], axis=0)
 
             # Update s via boundary-aware projection
-            if d > 2 and self.boundary is not None and self.t_data_ is not None:
+            if n_features > 2 and self.boundary is not None and self.t_data_ is not None:
                 t_members = self.t_data_[members]
                 _, s_avg = self.boundary.project_centroid(t_members)
                 new_centroids[i, 2] = s_avg
 
             # Update attribute features by simple mean
             attr_start = 3
-            if d > attr_start:
+            if n_features > attr_start:
                 new_centroids[i, attr_start:] = np.mean(
                     cluster_data[:, attr_start:], axis=0
                 )
@@ -264,7 +264,7 @@ class ObstacleKMeans:
 
         Parameters
         ----------
-        X : ndarray of shape (n_samples, d)
+        X : ndarray of shape (n_samples, n_features)
             The data matrix used for fitting.
         feature_names : list of str, optional
             Names for each feature column.
