@@ -14,10 +14,86 @@ The composite objective is:
 
 import numpy as np
 from scipy.optimize import dual_annealing
-from scipy.stats import kruskal
+from scipy.stats import kruskal, rankdata
 from itertools import combinations
 
 from .clustering import ObstacleKMeans
+
+
+def _dunns_test(groups):
+    """
+    Perform Dunn's post-hoc test for pairwise comparisons after Kruskal-Wallis.
+
+    Uses the standard Dunn's z-test approach with Bonferroni correction:
+      1. Rank all observations across all groups together
+      2. For each pair of groups, compute the z-statistic based on
+         the difference in mean ranks
+      3. Apply Bonferroni correction to the p-values
+
+    Parameters
+    ----------
+    groups : list of ndarray
+        Attribute values for each cluster.
+
+    Returns
+    -------
+    significant_pairs : list of tuple
+        Pairs (i, j) where the difference is significant after correction.
+    n_tests : int
+        Total number of pairwise tests performed.
+    """
+    from scipy.stats import norm
+
+    k = len(groups)
+    n_tests = k * (k - 1) // 2
+
+    # Rank all values together
+    all_values = np.concatenate(groups)
+    N = len(all_values)
+    ranks = rankdata(all_values)
+
+    # Split ranks back into groups
+    group_ranks = []
+    start = 0
+    for g in groups:
+        group_ranks.append(ranks[start:start + len(g)])
+        start += len(g)
+
+    # Compute mean rank for each group
+    mean_ranks = [np.mean(r) for r in group_ranks]
+    group_sizes = [len(g) for g in groups]
+
+    # Tied ranks correction factor
+    # C = 1 - sum(t^3 - t) / (N^3 - N) where t = number of ties at each rank
+    _, tie_counts = np.unique(ranks, return_counts=True)
+    tie_correction = 1.0 - np.sum(tie_counts**3 - tie_counts) / (N**3 - N)
+
+    significant_pairs = []
+
+    for (a, b) in combinations(range(k), 2):
+        # Z-statistic for the difference in mean ranks
+        diff = abs(mean_ranks[a] - mean_ranks[b])
+        variance = (N * (N + 1) / 12.0) * (1.0 / group_sizes[a] + 1.0 / group_sizes[b])
+
+        # Apply tie correction
+        if tie_correction > 0:
+            variance *= tie_correction
+
+        if variance <= 0:
+            continue
+
+        z = diff / np.sqrt(variance)
+
+        # Two-tailed p-value
+        p_value = 2.0 * (1.0 - norm.cdf(abs(z)))
+
+        # Bonferroni correction: multiply p-value by number of tests
+        p_corrected = min(p_value * n_tests, 1.0)
+
+        if p_corrected < 0.05:
+            significant_pairs.append((a, b))
+
+    return significant_pairs, n_tests
 
 
 def attribute_separation(X, labels, k, attr_indices):
@@ -25,13 +101,14 @@ def attribute_separation(X, labels, k, attr_indices):
     Measure the fraction of statistically significant pairwise
     attribute differences between clusters.
 
-    Uses the Kruskal-Wallis test for each attribute, followed by
-    pairwise comparisons. sigma_a in [0, 1] where 1 means all
-    pairwise differences are significant.
+    Uses the Kruskal-Wallis omnibus test for each attribute, followed
+    by Dunn's post-hoc test with Bonferroni correction for pairwise
+    comparisons. sigma_a in [0, 1] where 1 means all pairwise
+    differences are significant.
 
     Parameters
     ----------
-    X : ndarray of shape (n_samples, d)
+    X : ndarray of shape (n_samples, n_features)
         Data matrix.
     labels : ndarray of shape (n_samples,)
         Cluster assignments.
@@ -66,22 +143,17 @@ def attribute_separation(X, labels, k, attr_indices):
             details[attr_idx] = attr_detail
             continue
 
-        # Kruskal-Wallis test (non-parametric ANOVA)
+        # Kruskal-Wallis omnibus test (non-parametric ANOVA)
         try:
             stat, p_value = kruskal(*groups)
             attr_detail['kruskal_p'] = p_value
 
             if p_value < 0.05:
-                # Pairwise comparisons
-                for (a, b) in combinations(range(len(groups)), 2):
-                    if len(groups[a]) > 0 and len(groups[b]) > 0:
-                        try:
-                            _, p_pair = kruskal(groups[a], groups[b])
-                            if p_pair < 0.05:
-                                significant_count += 1
-                                attr_detail['pairwise_significant'].append((a, b))
-                        except ValueError:
-                            pass
+                # Dunn's post-hoc test with Bonferroni correction
+                sig_pairs, _ = _dunns_test(groups)
+                significant_count += len(sig_pairs)
+                attr_detail['pairwise_significant'] = sig_pairs
+
         except ValueError:
             pass
 
@@ -100,7 +172,7 @@ def objective_function(params, X, t_data, boundary, k=3, n_attr=0,
     ----------
     params : tuple of float
         (alpha, beta, gamma) weight values to evaluate.
-    X : ndarray of shape (n_samples, d)
+    X : ndarray of shape (n_samples, n_features)
         Data matrix.
     t_data : ndarray of shape (n_samples,)
         Boundary parameter values.
@@ -147,7 +219,7 @@ def optimize_weights(X, t_data, boundary, k=3, n_attr=0, attr_indices=None,
 
     Parameters
     ----------
-    X : ndarray of shape (n_samples, d)
+    X : ndarray of shape (n_samples, n_features)
         Data matrix.
     t_data : ndarray of shape (n_samples,)
         Boundary parameter values.
