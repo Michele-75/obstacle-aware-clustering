@@ -16,7 +16,7 @@ Two implementations are provided:
 import numpy as np
 from abc import ABC, abstractmethod
 from scipy.integrate import quad
-from scipy.optimize import minimize_scalar, fsolve
+from scipy.optimize import fsolve
 
 
 class Boundary(ABC):
@@ -102,8 +102,7 @@ class Boundary(ABC):
         t_closest = np.clip(t_closest, t_min, t_max)
 
         # Compute normalized arc length
-        L = self.total_arc_length()
-        s_closest = self.arc_length_at(t_closest) / L
+        s_closest = self.normalized_arc_length(t_closest)
 
         return t_closest, s_closest
 
@@ -222,12 +221,11 @@ class EllipseBoundary(Boundary):
         t_closest = fsolve(orthogonality, t_guess, full_output=False)[0]
         t_closest = t_closest % (2 * np.pi)
 
-        L = self.total_arc_length()
-        s_closest = self.arc_length_at(t_closest) / L
+        s_closest = self.normalized_arc_length(t_closest)
         return t_closest, s_closest
 
     def project_centroid(self, t_values):
-        """Optimized centroid projection using minimize_scalar."""
+        """Optimized centroid projection using atan2 initial guess."""
         xy_on_boundary = np.array([self.evaluate(t) for t in t_values])
         x_avg = np.mean(xy_on_boundary[:, 0])
         y_avg = np.mean(xy_on_boundary[:, 1])
@@ -236,16 +234,15 @@ class EllipseBoundary(Boundary):
         delta_y = (y_avg - self.k) / (self.sigma_y * self.sqrt_term)
         t_guess = np.arctan2(delta_y, delta_x) % (2 * np.pi)
 
-        result = minimize_scalar(
-            lambda t: np.linalg.norm(
-                self.evaluate(t) - np.array([x_avg, y_avg])
-            ),
-            bounds=(t_guess - np.pi / 4, t_guess + np.pi / 4),
-            method='bounded'
-        )
-        t_avg = result.x
-        L = self.total_arc_length()
-        s_avg = self.arc_length_at(t_avg) / L
+        def orthogonality(t):
+            x_t, y_t = self.evaluate(t)
+            dx_dt, dy_dt = self.derivative(t)
+            return (x_avg - x_t) * dx_dt + (y_avg - y_t) * dy_dt
+
+        t_avg = fsolve(orthogonality, t_guess, full_output=False)[0]
+        t_avg = t_avg % (2 * np.pi)
+
+        s_avg = self.normalized_arc_length(t_avg)
         return t_avg, s_avg
 
 
