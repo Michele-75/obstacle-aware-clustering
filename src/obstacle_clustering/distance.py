@@ -74,18 +74,18 @@ def weighted_distance(point, centroid, alpha=1.0, beta=1.0, gamma=1.0,
     float
         The weighted composite distance.
     """
-    d = len(point)
+    n_features = len(point)
 
     # Infer attribute count from vector length
     if n_attr == 0:
-        n_attr = d - n_geo - n_arc
+        n_attr = n_features - n_geo - n_arc
 
     # Geographic distance (Euclidean in x, y)
     geo_dist = np.linalg.norm(point[:n_geo] - centroid[:n_geo]) * alpha
 
     # Arc-length distance (loop-aware)
     arc_dist = 0.0
-    if n_arc > 0 and d > n_geo:
+    if n_arc > 0 and n_features > n_geo:
         s_point = point[n_geo]
         s_centroid = centroid[n_geo]
         arc_dist = loop_aware_distance(s_point, s_centroid) * beta
@@ -93,7 +93,7 @@ def weighted_distance(point, centroid, alpha=1.0, beta=1.0, gamma=1.0,
     # Attribute distance (Euclidean)
     attr_dist = 0.0
     attr_start = n_geo + n_arc
-    if n_attr > 0 and d > attr_start:
+    if n_attr > 0 and n_features > attr_start:
         attr_dist = np.linalg.norm(
             point[attr_start:attr_start + n_attr] -
             centroid[attr_start:attr_start + n_attr]
