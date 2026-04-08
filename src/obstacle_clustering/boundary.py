@@ -279,14 +279,14 @@ class SplineBoundary(Boundary):
         self._total_length = None
 
     def evaluate(self, t):
-        t = np.asarray(t)
-        if t.ndim == 0:  # scalar input
+        t = np.asarray(t).item() if np.asarray(t).ndim == 0 or np.asarray(t).size == 1 else t
+        if np.ndim(t) == 0:
             return np.array([float(self.spline_x(t)), float(self.spline_y(t))])
         return np.column_stack([self.spline_x(t), self.spline_y(t)])
 
     def derivative(self, t):
-        t = np.asarray(t)
-        if t.ndim == 0:  # scalar input
+        t = np.asarray(t).item() if np.asarray(t).ndim == 0 or np.asarray(t).size == 1 else t
+        if np.ndim(t) == 0:
             return np.array([float(self.spline_x(t, 1)), float(self.spline_y(t, 1))])
         return np.column_stack([self.spline_x(t, 1), self.spline_y(t, 1)])
 
