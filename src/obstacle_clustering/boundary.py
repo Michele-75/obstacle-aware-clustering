@@ -128,7 +128,8 @@ class Boundary(ABC):
         s_avg : float
             Normalized arc-length of the projected centroid.
         """
-        xy_on_boundary = np.array([self.evaluate(t) for t in t_values])
+        t_values = np.asarray(t_values)
+        xy_on_boundary = self.evaluate(t_values)
         x_avg = np.mean(xy_on_boundary[:, 0])
         y_avg = np.mean(xy_on_boundary[:, 1])
 
