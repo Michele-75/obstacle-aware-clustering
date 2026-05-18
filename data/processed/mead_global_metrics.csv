@@ -1,0 +1,2 @@
+lake,total_fires,year_min,year_max,k,opt_beta_basin,span_std_basin,span_oa_opt_basin,span_improvement_pct_basin
+Mead,844,1992,2020,4,1.85,0.33712496532080405,0.3046444629988947,9.634558594911919
