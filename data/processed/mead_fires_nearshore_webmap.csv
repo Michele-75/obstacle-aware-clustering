@@ -1,0 +1,215 @@
+LATITUDE,LONGITUDE,Cluster_Std,Cluster_OA,Cause,Specific_Cause,Fire_Size_Acres,Fire_Year,Dist_To_Lake_Km
+35.96,-113.7941,3,1,Natural,Lightning,600.0,1995,4.06
+36.0169,-113.8194,3,1,Natural,Lightning,0.1,1996,2.39
+35.9842,-113.8194,3,1,Natural,Lightning,0.1,1996,3.78
+36.1166,-114.8508,4,4,Human-Caused,Arson/incendiarism,0.1,1992,0.42
+36.2666,-114.3508,2,2,Natural,Lightning,125.0,1993,1.73
+36.5361,-114.4625,2,2,Human-Caused,Debris and open burning,0.1,1999,4.59
+36.11485,-113.86667,3,3,Natural,Lightning,193.0,1995,3.65
+36.10527,-114.84964,4,4,Human-Caused,Equipment and vehicle use,0.1,1992,0.67
+36.05007,-114.80113,4,4,Natural,Lightning,0.1,1992,0.11
+36.01609,-114.78693,4,4,Human-Caused,Debris and open burning,0.1,1992,1.3
+36.03289,-114.79616,4,4,Human-Caused,Debris and open burning,0.1,1992,0.92
+36.14165,-114.68692,4,4,Human-Caused,Other causes,0.1,1992,0.5
+36.03833,-114.80354,4,4,Natural,Lightning,0.1,1992,0.78
+36.14998,-114.75082,4,4,Human-Caused,Arson/incendiarism,0.5,1992,1.17
+36.02498,-114.78693,4,4,Human-Caused,Equipment and vehicle use,0.1,1992,1.15
+36.44714,-114.37858,2,2,Human-Caused,Recreation and ceremony,0.2,1992,1.19
+36.24998,-114.00079,1,3,Human-Caused,Debris and open burning,1.0,1992,0.14
+36.05832,-114.05912,1,1,Human-Caused,Debris and open burning,10.0,1992,4.24
+36.12034,-114.76347,4,4,Human-Caused,Recreation and ceremony,0.2,1993,0.38
+36.09998,-114.88416,4,4,Human-Caused,Smoking,0.3,1993,2.72
+36.16665,-114.01746,1,1,Human-Caused,Fireworks,25.0,1993,0.94
+36.05009,-114.80127,4,4,Human-Caused,Fireworks,0.4,1993,0.1
+36.05005,-114.80106,4,4,Human-Caused,Fireworks,0.4,1993,0.12
+36.03147,-114.71547,4,4,Human-Caused,Misuse of fire by a minor,8.2,1993,0.49
+36.24998,-113.95079,1,3,Human-Caused,Debris and open burning,0.5,1993,4.62
+36.39025,-114.43581,2,2,Human-Caused,Smoking,0.7,1993,3.17
+36.1809,-114.7272,4,4,Human-Caused,Misuse of fire by a minor,5.1,1993,2.81
+36.48331,-114.35081,2,2,Human-Caused,Debris and open burning,0.2,1993,0.84
+36.45793,-114.43577,2,2,Human-Caused,Fireworks,0.1,1993,4.06
+36.01665,-114.80081,4,4,Human-Caused,Equipment and vehicle use,0.1,1994,2.69
+36.15602,-114.10451,1,3,Human-Caused,Fireworks,5.0,1994,0.24
+36.46649,-114.38493,2,2,Human-Caused,Recreation and ceremony,0.5,1994,0.38
+36.09998,-114.86749,4,4,Human-Caused,Equipment and vehicle use,0.1,1994,1.85
+36.10095,-114.34269,1,1,Human-Caused,Misuse of fire by a minor,1.0,1994,0.35
+36.03405,-114.28798,1,1,Natural,Lightning,0.1,1994,0.38
+36.1134,-114.64701,4,4,Natural,Lightning,0.2,1994,0.09
+36.02093,-114.74692,4,4,Natural,Lightning,0.2,1994,0.63
+35.99998,-114.78415,4,4,Human-Caused,Smoking,0.1,1994,2.59
+36.30991,-114.43974,2,2,Human-Caused,Misuse of fire by a minor,0.1,1994,0.45
+36.30677,-114.43205,2,2,Human-Caused,Debris and open burning,0.4,1995,0.07
+36.38328,-114.45232,2,2,Human-Caused,Recreation and ceremony,0.8,1995,3.85
+36.05008,-114.82182,4,4,Human-Caused,Equipment and vehicle use,0.1,1995,1.1
+36.19998,-114.06746,1,3,Human-Caused,Recreation and ceremony,0.1,1995,0.57
+36.28188,-114.47031,2,2,Natural,Lightning,0.1,1995,3.85
+36.00451,-114.29494,1,1,Natural,Lightning,0.1,1995,1.42
+36.06468,-114.71461,4,4,Human-Caused,Recreation and ceremony,0.1,1995,1.18
+36.49755,-114.41416,2,2,Human-Caused,Recreation and ceremony,0.3,1995,0.34
+36.28484,-114.01198,1,3,Human-Caused,Arson/incendiarism,1.5,1995,3.56
+36.33278,-114.44256,2,2,Human-Caused,Recreation and ceremony,0.2,1995,0.56
+36.13758,-114.73251,4,4,Human-Caused,Debris and open burning,0.5,1995,0.39
+36.11189,-114.39264,1,1,Human-Caused,Misuse of fire by a minor,0.1,1995,0.27
+36.0221,-114.28674,1,1,Human-Caused,Misuse of fire by a minor,0.1,1995,0.86
+36.28315,-113.98827,1,3,Human-Caused,Recreation and ceremony,0.1,1995,3.52
+36.16668,-114.57162,4,4,Human-Caused,Equipment and vehicle use,0.1,1996,0.92
+36.38331,-114.43415,2,2,Human-Caused,Fireworks,0.1,1996,2.48
+36.01109,-114.78415,4,4,Human-Caused,Equipment and vehicle use,0.1,1996,1.52
+36.01787,-114.73698,4,4,Human-Caused,Arson/incendiarism,0.1,1996,0.32
+36.03331,-114.80082,4,4,Human-Caused,Other causes,0.1,1996,1.11
+36.24999,-114.01746,1,3,Human-Caused,Arson/incendiarism,0.1,1996,0.74
+36.51751,-114.425,2,2,Human-Caused,Recreation and ceremony,0.1,1996,0.64
+36.48023,-114.41154,2,2,Natural,Lightning,127.0,1996,1.1
+36.31297,-114.43078,2,2,Human-Caused,Other causes,0.1,1996,0.68
+36.01469,-114.30047,1,1,Natural,Lightning,2.0,1996,1.39
+36.10153,-114.64463,4,4,Natural,Lightning,0.1,1996,0.81
+36.00841,-114.76722,4,4,Human-Caused,Debris and open burning,0.1,1997,1.28
+36.16018,-114.89787,4,4,Human-Caused,Equipment and vehicle use,0.1,1997,3.73
+36.24634,-114.41732,2,2,Human-Caused,Fireworks,0.1,1997,0.59
+36.12498,-114.76471,4,4,Human-Caused,Recreation and ceremony,0.2,1997,0.62
+36.49872,-114.37714,2,2,Human-Caused,Recreation and ceremony,0.1,1997,0.15
+36.13031,-114.80382,4,4,Human-Caused,Recreation and ceremony,0.1,1997,0.52
+36.16693,-114.49248,4,4,Human-Caused,Recreation and ceremony,0.1,1997,0.17
+36.13047,-114.80137,4,4,Human-Caused,Equipment and vehicle use,0.1,1997,0.42
+36.12867,-114.78327,4,4,Human-Caused,Fireworks,0.5,1997,0.35
+36.03998,-114.80526,4,4,Human-Caused,Fireworks,0.1,1997,0.71
+36.0247,-114.79943,4,4,Human-Caused,Equipment and vehicle use,0.1,1997,1.86
+36.47901,-114.4216,2,2,Human-Caused,Smoking,0.5,1997,2.19
+35.99327,-114.09092,3,1,Natural,Lightning,0.5,1997,3.56
+36.41227,-114.41631,2,2,Human-Caused,Smoking,0.1,1997,2.14
+36.18108,-114.69692,4,4,Human-Caused,Equipment and vehicle use,0.1,1997,2.78
+36.16804,-114.12579,1,3,Human-Caused,Recreation and ceremony,0.1,1998,2.32
+36.3074,-114.42655,2,2,Human-Caused,Smoking,0.1,1998,0.36
+36.1303,-114.83879,4,4,Human-Caused,Recreation and ceremony,0.1,1998,0.52
+36.16668,-114.76843,4,4,Human-Caused,Equipment and vehicle use,0.1,1998,3.41
+36.09548,-114.90559,4,4,Human-Caused,Equipment and vehicle use,0.1,1998,4.43
+36.26696,-114.03419,1,3,Human-Caused,Smoking,0.1,1998,3.11
+35.99168,-114.69681,4,4,Human-Caused,Smoking,0.1,1998,3.73
+36.04249,-114.8085,4,4,Human-Caused,Recreation and ceremony,0.1,1998,0.66
+36.03503,-114.80082,4,4,Human-Caused,Recreation and ceremony,0.1,1998,0.95
+36.09435,-114.90186,4,4,Human-Caused,Equipment and vehicle use,0.1,1998,4.27
+36.06465,-114.80244,4,4,Natural,Lightning,0.5,1998,0.35
+36.11162,-114.87145,4,4,Human-Caused,Debris and open burning,0.1,1998,0.98
+36.01668,-114.71809,4,4,Human-Caused,Smoking,0.1,1998,0.63
+36.02088,-114.80402,4,4,Human-Caused,Misuse of fire by a minor,0.1,1998,2.45
+36.48477,-114.34421,2,2,Human-Caused,Arson/incendiarism,2.0,1999,0.26
+36.4601,-114.42854,2,2,Human-Caused,Arson/incendiarism,0.2,1999,3.4
+36.04331,-114.81054,4,4,Human-Caused,Recreation and ceremony,1.0,1999,0.72
+36.06468,-114.82182,4,4,Human-Caused,Smoking,0.1,1999,1.27
+36.06468,-114.82182,4,4,Human-Caused,Smoking,0.1,1999,1.27
+36.1746,-114.1247,1,3,Natural,Lightning,5.0,1999,2.55
+36.02734,-114.78753,4,4,Human-Caused,Recreation and ceremony,0.2,1999,0.99
+35.968,-113.8194,3,1,Human-Caused,Equipment and vehicle use,0.1,2001,4.65
+36.0169,-113.8194,3,1,Natural,Lightning,0.1,2002,2.39
+36.0055,-113.8025,3,1,Human-Caused,Smoking,0.1,2003,1.99
+35.9819,-113.8002,3,1,Human-Caused,Equipment and vehicle use,0.1,2003,2.34
+35.9661,-113.8033,3,1,Natural,Lightning,6.0,2007,3.83
+36.4806,-114.4494,2,2,Human-Caused,Recreation and ceremony,0.1,2007,4.06
+36.00887,-114.7972,4,4,Human-Caused,Recreation and ceremony,0.1,2000,2.52
+36.06365,-114.71864,4,4,Human-Caused,Smoking,0.1,2000,0.82
+36.43324,-114.37655,2,2,Natural,Lightning,0.1,2000,1.17
+36.03352,-114.83567,4,4,Natural,Lightning,0.1,2000,3.03
+36.02175,-114.82557,4,4,Natural,Lightning,0.1,2000,3.46
+36.08665,-114.83277,4,4,Human-Caused,Smoking,0.1,2000,1.5
+36.05832,-114.05663,1,1,Natural,Lightning,0.1,2000,4.45
+36.0736,-114.06274,1,1,Natural,Lightning,0.1,2000,3.93
+36.03548,-114.80402,4,4,Natural,Lightning,0.1,2000,1.07
+36.01865,-114.77145,4,4,Human-Caused,Fireworks,0.1,2001,0.23
+36.52734,-114.42714,2,2,Human-Caused,Debris and open burning,100.0,2001,1.51
+35.99285,-114.78098,4,4,Human-Caused,Equipment and vehicle use,0.1,2001,3.23
+36.02869,-114.70832,4,4,Human-Caused,Equipment and vehicle use,0.1,2002,0.69
+36.16942,-114.83499,4,4,Natural,Lightning,0.1,2002,4.04
+36.27922,-114.02109,1,3,Natural,Lightning,0.1,2002,3.28
+36.13045,-114.79242,4,4,Human-Caused,Smoking,0.1,2003,0.72
+36.07804,-114.05218,1,1,Natural,Lightning,0.5,2003,4.35
+36.04,-114.7694,4,4,Human-Caused,Arson/incendiarism,0.1,2004,1.2
+36.0172,-114.7508,4,4,Human-Caused,Misuse of fire by a minor,0.1,2004,0.68
+36.1181,-114.0972,1,1,Human-Caused,Arson/incendiarism,0.2,2004,0.24
+36.1333,-114.8342,4,4,Natural,Lightning,0.2,2004,0.19
+36.0128,-114.7544,4,4,Natural,Lightning,0.1,2004,0.95
+36.0808,-114.8203,4,4,Natural,Lightning,0.3,2004,0.64
+36.503,-114.3991,2,2,Natural,Lightning,50.0,2004,0.68
+36.0341,-114.803,4,4,Natural,Lightning,0.1,2004,1.15
+36.0019,-114.7247,4,4,Natural,Lightning,0.1,2004,1.26
+36.5183,-114.43,2,2,Natural,Lightning,0.1,2005,1.09
+35.9903,-114.0839,3,1,Natural,Lightning,0.1,2005,4.27
+35.9772,-114.0911,3,1,Natural,Lightning,0.1,2005,4.84
+36.1494,-114.8119,4,4,Human-Caused,Recreation and ceremony,0.1,2005,2.24
+36.4722,-114.3592,2,2,Natural,Lightning,25.0,2005,0.25
+36.1592,-114.8056,4,4,Human-Caused,Recreation and ceremony,0.8,2006,3.47
+36.0342,-114.8014,4,4,Natural,Lightning,0.1,2006,1.06
+36.1425,-114.73,4,4,Human-Caused,Misuse of fire by a minor,0.1,2006,0.39
+36.0117,-114.7947,4,4,Human-Caused,Smoking,0.1,2007,2.15
+36.0783,-114.8036,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.14
+36.0328,-114.7792,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.01
+36.0331,-114.7805,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.07
+36.0236,-114.7733,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.19
+36.0228,-114.773,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.14
+36.0819,-114.8019,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.1
+36.0814,-114.8153,4,4,Human-Caused,Recreation and ceremony,0.1,2007,0.25
+36.3778,-114.44221,2,2,Human-Caused,Fireworks,3.3,2007,3.03
+36.0367,-114.7833,4,4,Human-Caused,Recreation and ceremony,0.1,2008,0.09
+36.02983,-114.32424,1,1,Human-Caused,Power generation/transmission/distribution,0.1,2008,0.87
+36.04786,-114.82016,4,4,Human-Caused,Debris and open burning,0.1,2008,1.02
+36.1478,-113.975,1,3,Natural,Lightning,1.5,2008,0.48
+36.1742,-114.7644,4,4,Human-Caused,Equipment and vehicle use,0.1,2008,4.05
+36.00872,-114.76643,4,4,Human-Caused,Debris and open burning,0.1,2008,1.24
+36.1553,-114.8083,4,4,Human-Caused,Recreation and ceremony,0.1,2009,2.97
+36.30824,-114.43582,2,2,Human-Caused,Arson/incendiarism,0.1,2009,0.24
+36.0372,-114.8044,4,4,Human-Caused,Arson/incendiarism,0.1,2009,0.93
+36.0397,-114.8019,4,4,Natural,Lightning,0.1,2009,0.56
+36.0244,-114.798,4,4,Human-Caused,Equipment and vehicle use,0.1,2010,1.82
+36.4244,-114.4155,2,2,Human-Caused,Equipment and vehicle use,0.1,2010,2.95
+36.1394,-114.7267,4,4,Human-Caused,Recreation and ceremony,0.1,2010,0.37
+36.375,-114.3942,2,2,Human-Caused,Fireworks,0.1,2010,0.28
+36.0083,-114.8069,4,4,Natural,Lightning,0.1,2010,3.28
+36.0081,-114.8025,4,4,Natural,Lightning,0.1,2011,2.96
+36.3008,-114.4339,2,2,Natural,Lightning,0.1,2011,0.59
+36.0347,-114.3203,1,1,Human-Caused,Equipment and vehicle use,0.3,2011,0.26
+36.1158,-114.8392,4,4,Human-Caused,Arson/incendiarism,0.3,2011,0.19
+36.0356,-114.8008,4,4,Natural,Lightning,0.1,2011,0.9
+36.1428,-114.6528,4,4,Natural,Lightning,0.1,2011,0.2
+36.1192,-114.8667,4,4,Natural,Lightning,0.1,2011,0.05
+35.9886,-113.8122,3,1,Human-Caused,Smoking,0.4,2012,3.02
+36.0067,-114.7742,4,4,Human-Caused,Recreation and ceremony,0.1,2012,1.58
+36.1367,-114.8653,4,4,Human-Caused,Equipment and vehicle use,0.1,2012,0.78
+36.0356,-114.8014,4,4,Natural,Lightning,0.1,2012,0.93
+35.9772,-114.0919,3,1,Natural,Lightning,0.5,2012,4.8
+36.0544,-114.8197,4,4,Human-Caused,Equipment and vehicle use,0.1,2012,0.88
+36.5478,-114.4511,2,2,Natural,Lightning,0.3,2012,4.63
+36.0225,-114.8344,4,4,Natural,Lightning,0.3,2013,3.82
+36.0069,-114.7533,4,4,Human-Caused,Recreation and ceremony,0.1,2013,1.6
+36.0042,-114.7636,4,4,Human-Caused,Recreation and ceremony,0.1,2013,1.74
+36.1225,-114.7972,4,4,Natural,Lightning,0.1,2014,0.08
+36.1722,-114.7642,4,4,Human-Caused,Equipment and vehicle use,0.1,2014,3.83
+36.1353,-114.9078,4,4,Natural,Lightning,0.1,2014,2.93
+36.3164,-114.4605,2,2,Human-Caused,Equipment and vehicle use,0.3,2014,2.24
+36.0103,-114.7989,4,4,Natural,Lightning,0.1,2014,2.55
+36.0872,-114.2253,1,3,Natural,Lightning,0.1,2014,3.84
+36.0981,-114.0453,1,1,Natural,Lightning,0.1,2014,4.47
+36.0342,-114.7975,4,4,Natural,Lightning,0.1,2015,0.87
+36.0278,-113.8036,3,1,Natural,Lightning,0.1,2017,0.55
+36.37458,-114.44261,2,2,Human-Caused,Smoking,0.1,2016,2.68
+36.0147,-114.7472,4,4,Human-Caused,Recreation and ceremony,0.1,2016,1.1
+35.97906,-114.69472,4,4,Natural,Lightning,0.1,2016,4.88
+36.12258,-114.90404,4,4,Natural,Lightning,0.1,2016,2.7
+36.11333,-114.66777,4,4,Human-Caused,Arson/incendiarism,0.1,2016,0.56
+36.01169,-114.79468,4,4,Natural,Lightning,0.1,2016,2.15
+36.5303,-114.418,2,2,Natural,Lightning,1.0,2016,1.53
+36.14131,-114.72892,4,4,Human-Caused,Smoking,1.0,2017,0.38
+36.095069,-113.9003,3,1,Natural,Lightning,165.0,2018,0.33
+36.08592,-114.08683,1,1,Human-Caused,Equipment and vehicle use,0.4,2018,1.55
+36.0314,-114.32324,1,1,Human-Caused,Recreation and ceremony,0.1,2018,0.68
+36.12798,-114.87159,4,4,Human-Caused,Recreation and ceremony,0.1,2018,0.36
+36.2097,-114.5698,4,4,Human-Caused,Fireworks,0.6,2018,4.33
+36.112095,-114.86149,4,4,Human-Caused,Smoking,0.1,2018,0.41
+35.98908,-114.715388,4,4,Human-Caused,Smoking,0.1,2018,2.91
+36.07249,-114.06029,1,1,Human-Caused,Equipment and vehicle use,0.1,2019,4.17
+36.1097,-114.8883,4,4,Human-Caused,Equipment and vehicle use,0.1,2019,2.21
+36.30782768,-114.42903527,2,2,Human-Caused,Recreation and ceremony,0.1,2020,0.38
+36.09822529,-114.85141177,4,4,Human-Caused,Equipment and vehicle use,0.1,2020,1.47
+36.1581653,-114.81221176,4,4,Human-Caused,Arson/incendiarism,0.1,2020,3.1
+36.19110531,-114.73421175,4,4,Human-Caused,Equipment and vehicle use,0.1,2020,4.1
+36.00214528,-114.72411173,4,4,Human-Caused,Equipment and vehicle use,0.1,2020,1.26
+36.03040531,-114.32431166,1,1,Human-Caused,Recreation and ceremony,0.4,2020,0.81
+36.03720528,-114.80091175,4,4,Human-Caused,Recreation and ceremony,0.1,2020,0.75
