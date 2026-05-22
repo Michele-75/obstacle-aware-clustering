@@ -1,2 +1,2 @@
 lake,subset,threshold_km,total_fires,year_min,year_max,k,opt_beta,span_std,span_oa_opt,span_improvement_pct,perimeter_km,mean_span_std_km,mean_span_oa_opt_km
-Mead,near_shore,5,214,1992,2020,4,1.08,0.2425274728267004,0.19641452694776937,19.01349374628636,690.0,167.0,136.0
+Mead,near_shore,5,214,1992,2020,4,1.193103448275862,0.2425274728267004,0.19641452694776937,19.01349374628636,690.0,167.0,136.0
