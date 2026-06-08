@@ -9,7 +9,7 @@ Standard k-means groups points by straight-line distance, which is rarely the pr
 
 > 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185)** (ArcGIS Online)
 >
-> 📄 **[Full writeup (PDF)](obstacle_aware_kmeans.pdf)**
+> 📄 **[Full writeup (PDF)](report/obstacle_aware_kmeans.pdf)**
 
 ---
 
