@@ -1,152 +1,129 @@
-# Obstacle-Aware Clustering for Geographic Data
+# Tailored k-means for Spatial Clustering with Obstacles: A Wildfire Case Study
 
-**Clustering around real-world barriers using arc-length parameterization and modified k-Means**
+Standard k-means groups points by straight-line distance, which is rarely the practical distance between objects in the real world. A lake, a highway, or a mountain range can change how close two points really are. This project develops an obstacle-aware version of k-means that adds a single feature — the arc-length position of each point along a closed obstacle boundary — and weights it against ordinary spatial distance through one tunable parameter. It is applied to wildfire records around two lakes of contrasting shape.
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Lake Mead near-shore: standard k-means stretches one cluster across the water; the obstacle-aware version pulls it onto a single arm](figures/mead_near_comparison.png)
+
+> 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185**) (ArcGIS Online)
+> 📄 **[Full writeup (PDF)](report/main.pdf)**
+
+---
 
 ## Overview
 
-Standard clustering algorithms like k-Means assume that straight-line (Euclidean) distance reflects true proximity. In geographic settings, this assumption breaks down when obstacles — lakes, rivers, mountain ranges — separate nearby points. Two locations on opposite shores of a lake may appear close in Euclidean space but are far apart by any realistic travel path.
+For a point $\mathbf{x} = (x, y, s)$ and a centroid $\boldsymbol{\mu}$, the clustering distance is
 
-This project develops an **obstacle-aware extension of k-Means** that addresses this problem by:
+$$d^2(\mathbf{x}, \boldsymbol{\mu}) = \alpha^2\,\lVert (x,y)-(x_\mu,y_\mu) \rVert^2 \;+\; \beta^2\, d_s(s, s_\mu)^2$$
 
-1. **Parameterizing the obstacle boundary** as a smooth closed curve (analytically for simple shapes, via cubic splines for real-world geometries)
-2. **Projecting each data point** onto the boundary and computing a normalized arc-length parameter $s \in [0, 1]$
-3. **Defining a loop-aware distance** that respects the circular topology: $d_s(s_1, s_2) = \min(|s_1 - s_2|,\; 1 - |s_1 - s_2|)$
-4. **Combining spatial and attribute distances** in a weighted metric that simultaneously optimizes geographic coherence and attribute separation
+where $s \in [0,1]$ is the point's position along the shoreline. We fix $\alpha = 1$ and let $\beta$ be the single dial. At $\beta = 0$ the shoreline term vanishes and the method is exactly standard k-means, so it is a strict generalization. As $\beta$ grows, position along the shore counts for more, and the clustering increasingly groups fires that share a stretch of shoreline. The shoreline distance $d_s$ is loop-aware: it measures the shorter way around the seam where $s = 0$ meets $s = 1$. The composite distance also admits an optional attribute term $\gamma$, held at zero throughout.
 
-The method remains fully compatible with the k-Means framework, making it computationally efficient while capturing obstacle geometry that pure Euclidean methods miss.
+The method is applied to FPA FOD wildfire records (1992–2020) around two lakes:
 
-## Case Studies
+- **Lake Tahoe** — compact, roughly oval, perimeter 118.3 km, 1,068 fires
+- **Lake Mead** — long, multi-arm reservoir, perimeter 686.2 km, 844 fires
 
-### 1. Synthetic Ellipse (Proof of Concept)
-A controlled experiment with generated data around an elliptical obstacle. Demonstrates that standard k-Means incorrectly clusters across the barrier, while the arc-length–augmented version produces geographically coherent clusters.
+Each lake is analyzed at a basin scale and a near-shore scale, with $k = 4$ held fixed so any difference reflects lake geometry rather than a different number of clusters. The primary metric is the mean arc-length span: the shortest arc of shoreline containing all of a cluster's fires, averaged over clusters. Lower means tighter shoreline grouping.
 
-### 2. Lake Tahoe Hotels
-Real-world application clustering hotels around Lake Tahoe. The lake boundary is extracted programmatically and parameterized with cubic splines. Clusters jointly optimize spatial compactness and separation in hotel attributes (rating, price).
+## Results
 
-### 3. Lake Tahoe Environmental Data
-Application to environmental monitoring data around Lake Tahoe, demonstrating the method's relevance to scientific research contexts such as water quality monitoring and ecological assessment.
+| Lake / scale     | Fires | Standard | Optimized | Improvement |
+|------------------|------:|---------:|----------:|------------:|
+| Tahoe basin      | 1,068 | 31.3 km  | 28.8 km   | +8.1%       |
+| Tahoe near-shore |   296 | 26.6 km  | 26.6 km   | 0.0%        |
+| Mead basin       |   844 | 234.1 km | 217.0 km  | +7.3%       |
+| Mead near-shore  |   214 | 166.4 km | 134.8 km  | +19.0%      |
 
-## Repository Structure
+At the basin scale both lakes improve by similar percentages. At the near-shore scale they diverge: Tahoe shows no change while Mead gives the project's largest gain. The obstacle parameter helps to the extent that a lake's shape makes shoreline distance differ from straight-line distance. On Tahoe's compact oval, a fire's position around the shore is closely determined by its coordinates near the lake, so the arc-length feature is largely redundant. On Mead's multi-arm shape, two fires can sit close in straight-line distance while being far apart along the shore — the shore runs out to the tip of one arm and back before reaching the other — so the feature carries information the coordinates do not. The figures show the mechanism directly: standard k-means assigns one cluster across two arms of Lake Mead, and the obstacle-aware version splits it onto a single arm.
+
+## Method
+
+The arc-length position $s$ is found by projecting each fire onto the lake boundary — a closed cubic spline through the shoreline vertices — and converting the projection to normalized arc length so that equal steps in $s$ cover equal stretches of shore. Clustering keeps the structure of standard k-means but uses the composite distance in the assignment step; centroids update by taking the planar mean and projecting it back onto the boundary for the $s$ component, and seeding uses a k-means++ variant adapted to the same distance.
+
+We choose $\beta$ by sweeping a 30-point grid and scoring each fit with the within-cluster distortion $J$ (computed at fixed unit weights so it stays comparable across the sweep). Rather than taking the grid minimum, which can be an isolated numerical spike, we keep the values that (1) have $J$ within tolerance of the minimum, (2) are stable, with at least one neighboring grid point also low-$J$, and (3) leave no cluster under 10 fires, then break the tie on smallest span. A synthetic toy problem (a thin ellipse with three point groups) confirms the feature works as designed: where straight-line distance pulls a point to the cluster on the wrong side of the obstacle, the arc-length parameter pulls it back.
+
+Full derivations, figures, and the attribute analysis are in the [writeup](report/main.pdf).
+
+## Repository structure
 
 ```
-obstacle-aware-clustering/
-│
-├── README.md                          # This file
-├── environment.yml                    # Conda environment specification
-├── LICENSE                            # MIT License
-│
-├── notebooks/
-│   ├── 01_toy_problem_ellipse.ipynb   # Synthetic ellipse case study
-│   ├── 02_lake_boundary.ipynb         # Lake Tahoe boundary extraction & parameterization
-│   ├── 03_clustering_hotels.ipynb     # Hotel clustering around Lake Tahoe
-│   ├── 04_clustering_environment.ipynb# Environmental data clustering
-│   └── 05_results_comparison.ipynb    # Cross-case-study results and interactive maps
-│
+.
+├── README.md
+├── LICENSE
+├── environment.yml                      # conda environment spec
+├── pyproject.toml
 ├── src/
-│   └── obstacle_clustering/
-│       ├── __init__.py                # Package init
-│       ├── boundary.py                # Boundary parameterization (ellipse + spline)
-│       ├── distance.py                # Distance metrics (Euclidean, loop-aware, weighted)
-│       ├── clustering.py              # Obstacle-aware k-Means algorithm
-│       ├── optimization.py            # Hyperparameter tuning (simulated annealing)
-│       └── visualization.py           # Plotting and interactive map utilities
-│
+│   └── obstacle_clustering/              # custom package, editable install
+│       ├── __init__.py
+│       ├── boundary.py                   # shoreline spline, projection, arc-length s
+│       ├── distance.py                   # loop-aware composite distance
+│       ├── clustering.py                 # obstacle-aware k-means
+│       ├── optimization.py               # beta sweep and selection
+│       └── visualization.py              # figures
+├── notebooks/
+│   ├── 01_toy_problem_ellipse.ipynb
+│   ├── 02_tahoe_wildfires_clustered.ipynb
+│   ├── 03_mead_wildfires_clustered.ipynb
+│   └── 04_arcgis_dashboard.ipynb         # ArcGIS dashboard build (showcase; needs Esri tooling)
 ├── data/
-│   ├── raw/                           # Original data files (not modified)
-│   ├── processed/                     # Cleaned and normalized datasets
-│   └── boundaries/                    # Obstacle boundary coordinates
-│
-├── figures/                           # Saved plots and maps
-│
-└── docs/
-    └── report.pdf                     # Project writeup
+│   ├── raw/                              # source downloads (not committed)
+│   ├── boundaries/                       # processed lake boundary polygons
+│   ├── processed/                        # cleaned fire records
+│   └── cached/                           # intermediates (not committed)
+└── report/
+    ├── obstacle-aware-kmeans.tex
+    └── obstacle-aware-kmeans.pdf
 ```
 
-## Getting Started
 
-### Prerequisites
+## Notebooks
 
-- Python 3.10+
-- Conda (recommended) or pip
-- ArcGIS Online account (optional — needed only for ArcGIS-based boundary extraction)
+The notebooks are the core of the project. They render directly on GitHub — code and figures inline, no setup needed — so the quickest way to read the project is to click through them in order. For the figure-heavy ones, [nbviewer](https://nbviewer.org) is a reliable alternative if GitHub's renderer is slow.
 
-### Installation
+1. **[01 — Toy problem (synthetic ellipse)](notebooks/01_toy_problem_ellipse.ipynb)** — *start here.* A clean case where the arc-length feature recovers the correct grouping and standard k-means does not.
+2. **[02 — Lake Tahoe](notebooks/02_tahoe_wildfires_clustered.ipynb)** — basin and near-shore, the compact-oval case.
+3. **[03 — Lake Mead](notebooks/03_mead_wildfires_clustered.ipynb)** — the multi-arm case; the near-shore result is the project's largest gain.
+4. **[04 — ArcGIS dashboard](notebooks/04_arcgis_dashboard.ipynb)** — how the interactive dashboard was built in ArcGIS Online. This one uses Esri tooling outside the conda environment, so it's included to document the work rather than to be re-run.
+
+## Getting started
+
+To read the project, the rendered notebooks above need no setup. To run it yourself:
 
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/obstacle-aware-clustering.git
-cd obstacle-aware-clustering
-
-# Create and activate the conda environment
+git clone https://github.com/REPLACE_USER/REPLACE_REPO.git
+cd REPLACE_REPO
 conda env create -f environment.yml
 conda activate obstacle-clustering
-
-# Install the local package in development mode
 pip install -e .
-```
-
-### Running the Notebooks
-
-Launch Jupyter and run the notebooks in order:
-
-```bash
 jupyter lab
 ```
 
-1. **`01_toy_problem_ellipse.ipynb`** — Start here to understand the method
-2. **`02_lake_boundary.ipynb`** — Extract and parameterize the Lake Tahoe boundary
-3. **`03_clustering_hotels.ipynb`** — Cluster hotels around the lake
-4. **`04_clustering_environment.ipynb`** — Environmental data application
-5. **`05_results_comparison.ipynb`** — Compare results and view interactive maps
+Then run notebooks 01–03 in order. Notebook 04 is a showcase of the ArcGIS dashboard build and isn't part of this environment. The large raw datasets are not committed — see below to obtain them.
 
-## Method Summary
+## Data sources
 
-### Distance Metric
+| Source | Use |
+|--------|-----|
+| **FPA FOD** (Short, 1992–2020) | Wildfire occurrence records |
+| **NHD** (National Hydrography Dataset) | Lake boundaries — Tahoe layer 10 (Tahoe Keys region thinned); Mead layer 12 (features above 1 km² unioned, including the eastern arm NHD splits across HUC8 boundaries) |
+| **TRPA** | Tahoe basin boundary |
 
-Each data point is represented as $(x, y, s, a_1, a_2, \ldots)$ where $(x,y)$ are geographic coordinates, $s$ is the normalized arc-length position, and $a_i$ are attribute features. The weighted distance is:
+Boundary polygons are simplified with Douglas–Peucker (≈100 m for Tahoe, ≈450 m for Mead) and fit with a closed cubic spline before projection.
 
-$$d^2(\mathbf{x}_i, \mathbf{c}_j) = \alpha^2 \| (x_i, y_i) - (c_{jx}, c_{jy}) \|^2 + \beta^2 \, d_s(s_i, s_{cj})^2 + \gamma^2 \sum_m (a_{im} - a_{cjm})^2$$
+## References
 
-### Centroid Update
+- McMahon et al. (2022), *Unsupervised learning methods for efficient geographic clustering and identification of disease disparities…*, Health Care Management Science. The dual-domain framing — two kinds of features combined in a tuned non-Euclidean distance — is adapted here for two views of the same geography.
+- Short, K. C. (2022), *Spatial wildfire occurrence data for the United States, 1992–2020 (FPA_FOD)*, 6th Edition. Forest Service Research Data Archive.
+- U.S. Geological Survey, *National Hydrography Dataset (NHD)*.
+- Tahoe Regional Planning Agency, *Tahoe Basin Boundary*.
 
-- $(x, y)$ and attribute centroids are updated by standard averaging
-- The $s$ centroid is recomputed by projecting back onto the boundary curve, respecting the circular topology
+## Acknowledgements
 
-### Hyperparameter Optimization
-
-Weights $(\alpha, \beta, \gamma)$ are tuned via simulated annealing to minimize a composite objective:
-
-$$J = \bar{\rho} + (1 - \sigma_a)$$
-
-where $\bar{\rho}$ measures within-cluster geographic distortion and $\sigma_a$ measures the fraction of statistically significant attribute differences between clusters.
-
-## Key Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| `numpy`, `scipy` | Numerical computation, optimization, spline fitting |
-| `scikit-learn` | Preprocessing, baseline k-Means comparison |
-| `matplotlib`, `seaborn` | Static visualizations |
-| `folium` | Interactive maps |
-| `arcgis` | Boundary extraction from ArcGIS Living Atlas |
-| `osmnx` / `shapely` | Alternative boundary extraction (OpenStreetMap) |
-| `geopandas` | Geospatial data handling |
-| `jupyter` | Interactive notebooks |
+Thanks to Dr. Mansoor Haider (North Carolina State University), who suggested the tailored obstacle-aware k-means idea and guided the method's development.
 
 ## Author
 
-**Michele Perry**
-M.S. Applied Mathematics
+**Michele Perry** — MS, Applied Mathematics. Portfolio project for environmental science / GIS roles.
 
 ## License
 
-This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
-
-## Acknowledgments
-
-- Supervised by [Professor Name], [University Name]
-- Lake Tahoe boundary data from [ArcGIS Living Atlas / OpenStreetMap]
-- Hotel data collected via Google Maps Places API
+Released under the [MIT License](LICENSE). 
