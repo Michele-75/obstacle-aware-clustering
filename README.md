@@ -1,13 +1,15 @@
 # Tailored k-means for Spatial Clustering with Obstacles: A Wildfire Case Study
 
-Standard k-means groups points by straight-line distance, which is rarely the practical distance between objects in the real world. A lake, a highway, or a mountain range can change how close two points really are. This project develops an obstacle-aware version of k-means that adds a single feature — the arc-length position of each point along a closed obstacle boundary — and weights it against ordinary spatial distance through one tunable parameter. It is applied to wildfire records around two lakes of contrasting shape.
+Standard k-means groups points by straight-line distance, which is rarely the practical distance between objects in the real world. A lake, a highway, or a mountain range can change how close two points really are. This project develops an obstacle-aware version of k-means that adds a single feature - the arc-length position of each point along a closed obstacle boundary - and weights it against ordinary spatial distance through one tunable parameter. It is applied to wildfire records around two lakes of contrasting shape.
 
 <p align="center">
-  <img src="figures/mead-near-comparison.png" alt="Lake Mead near-shore: standard k-means stretches one cluster across the water; the obstacle-aware version pulls it onto a single arm" width="500">
+  <img src="figures/mead-near-comparison.png" alt="Lake Mead near-shore: standard k-means stretches one cluster across the water; the obstacle-aware version pulls it onto a single arm" width="500"><br>
+  <sub><em>Lake Mead, near-shore. Standard k-means (top) spreads one cluster across two arms of the reservoir; the obstacle-aware version (bottom) keeps each cluster on a single arm — the project's largest gain (+19%).</em></sub>
 </p>
 
-> 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185**) (ArcGIS Online)
-> 📄 **[Full writeup (PDF)](report/main.pdf)**
+> 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185)** (ArcGIS Online)
+>
+> 📄 **[Full writeup (PDF)](obstacle-aware-kmeans.pdf)**
 
 ---
 
@@ -21,8 +23,8 @@ where $s \in [0,1]$ is the point's position along the shoreline. We fix $\alpha 
 
 The method is applied to FPA FOD wildfire records (1992–2020) around two lakes:
 
-- **Lake Tahoe** — compact, roughly oval, perimeter 118.3 km, 1,068 fires
-- **Lake Mead** — long, multi-arm reservoir, perimeter 686.2 km, 844 fires
+- **Lake Tahoe** -- compact, roughly oval, perimeter 118.3 km, 1,068 fires
+- **Lake Mead** -- long, multi-arm reservoir, perimeter 686.2 km, 844 fires
 
 Each lake is analyzed at a basin scale and a near-shore scale, with $k = 4$ held fixed so any difference reflects lake geometry rather than a different number of clusters. The primary metric is the mean arc-length span: the shortest arc of shoreline containing all of a cluster's fires, averaged over clusters. Lower means tighter shoreline grouping.
 
@@ -35,15 +37,15 @@ Each lake is analyzed at a basin scale and a near-shore scale, with $k = 4$ held
 | Mead basin       |   844 | 234.1 km | 217.0 km  | +7.3%       |
 | Mead near-shore  |   214 | 166.4 km | 134.8 km  | +19.0%      |
 
-At the basin scale both lakes improve by similar percentages. At the near-shore scale they diverge: Tahoe shows no change while Mead gives the project's largest gain. The obstacle parameter helps to the extent that a lake's shape makes shoreline distance differ from straight-line distance. On Tahoe's compact oval, a fire's position around the shore is closely determined by its coordinates near the lake, so the arc-length feature is largely redundant. On Mead's multi-arm shape, two fires can sit close in straight-line distance while being far apart along the shore — the shore runs out to the tip of one arm and back before reaching the other — so the feature carries information the coordinates do not. The figures show the mechanism directly: standard k-means assigns one cluster across two arms of Lake Mead, and the obstacle-aware version splits it onto a single arm.
+At the basin scale both lakes improve by similar percentages. At the near-shore scale they diverge: Tahoe shows no change while Mead gives the project's largest gain. The obstacle parameter helps to the extent that a lake's shape makes shoreline distance differ from straight-line distance. On Tahoe's compact oval, a fire's position around the shore is closely determined by its coordinates near the lake, so the arc-length feature is largely redundant. On Mead's multi-arm shape, two fires can sit close in straight-line distance while being far apart along the shore. The shore runs out to the tip of one arm and back before reaching the other, so the feature carries information the coordinates do not. The figures show the mechanism directly: standard k-means assigns one cluster across two arms of Lake Mead, and the obstacle-aware version splits it onto a single arm.
 
 ## Method
 
-The arc-length position $s$ is found by projecting each fire onto the lake boundary — a closed cubic spline through the shoreline vertices — and converting the projection to normalized arc length so that equal steps in $s$ cover equal stretches of shore. Clustering keeps the structure of standard k-means but uses the composite distance in the assignment step; centroids update by taking the planar mean and projecting it back onto the boundary for the $s$ component, and seeding uses a k-means++ variant adapted to the same distance.
+The arc-length position $s$ is found by projecting each fire onto the lake boundary - a closed cubic spline through the shoreline vertices - and converting the projection to normalized arc length so that equal steps in $s$ cover equal stretches of shore. Clustering keeps the structure of standard k-means but uses the composite distance in the assignment step; centroids update by taking the planar mean and projecting it back onto the boundary for the $s$ component, and seeding uses a k-means++ variant adapted to the same distance.
 
-We choose $\beta$ by sweeping a 30-point grid and scoring each fit with the within-cluster distortion $J$ (computed at fixed unit weights so it stays comparable across the sweep). Rather than taking the grid minimum, which can be an isolated numerical spike, we keep the values that (1) have $J$ within tolerance of the minimum, (2) are stable, with at least one neighboring grid point also low-$J$, and (3) leave no cluster under 10 fires, then break the tie on smallest span. A synthetic toy problem (a thin ellipse with three point groups) confirms the feature works as designed: where straight-line distance pulls a point to the cluster on the wrong side of the obstacle, the arc-length parameter pulls it back.
+We choose $\beta$ by sweeping a 30-point grid and scoring each fit with the within-cluster distortion $J$ (computed at fixed unit weights so it stays comparable across the sweep). Rather than taking the grid minimum, which can be an isolated numerical spike, we keep the values that (1) have $J$ within tolerance of the minimum, (2) are stable, with at least one neighboring grid point also low- $J$, and (3) leave no cluster under 10 fires, then break the tie on smallest span. A synthetic toy problem (a thin ellipse with three point groups) confirms the feature works as designed: where straight-line distance pulls a point to the cluster on the wrong side of the obstacle, the arc-length parameter pulls it back.
 
-Full derivations, figures, and the attribute analysis are in the [writeup](report/main.pdf).
+Full derivations, figures, and the attribute analysis are in the [writeup](obstacle-aware-kmeans.pdf).
 
 ## Repository structure
 
@@ -77,18 +79,18 @@ Full derivations, figures, and the attribute analysis are in the [writeup](repor
 ```
 
 
-## Notebooks
+## Quick Start - Notebooks
 
-The notebooks are the core of the project. They render directly on GitHub — code and figures inline, no setup needed — so the quickest way to read the project is to click through them in order. For the figure-heavy ones, [nbviewer](https://nbviewer.org) is a reliable alternative if GitHub's renderer is slow.
+The notebooks are the core of the project. They render directly on GitHub, code and figures inline, so the quickest way to read the project is to click through them in order. 
 
-1. **[01 — Toy problem (synthetic ellipse)](notebooks/01_toy_problem_ellipse.ipynb)** — *start here.* A clean case where the arc-length feature recovers the correct grouping and standard k-means does not.
-2. **[02 — Lake Tahoe](notebooks/02_tahoe_wildfires_clustered.ipynb)** — basin and near-shore, the compact-oval case.
-3. **[03 — Lake Mead](notebooks/03_mead_wildfires_clustered.ipynb)** — the multi-arm case; the near-shore result is the project's largest gain.
-4. **[04 — ArcGIS dashboard](notebooks/04_arcgis_dashboard.ipynb)** — how the interactive dashboard was built in ArcGIS Online. This one uses Esri tooling outside the conda environment, so it's included to document the work rather than to be re-run.
+1. **[01 — Toy problem (synthetic ellipse)](notebooks/01_toy_problem_ellipse.ipynb)** - *start here.* A clean case where the arc-length feature recovers the correct grouping and standard k-means does not.
+2. **[02 — Lake Tahoe](notebooks/02_tahoe_wildfires_clustered.ipynb)** - basin and near-shore, the compact-oval case.
+3. **[03 — Lake Mead](notebooks/03_mead_wildfires_clustered.ipynb)** - the multi-arm case; the near-shore result is the project's largest gain.
+4. **[04 — ArcGIS dashboard](notebooks/04_arcgis_dashboard.ipynb)** - how the interactive dashboard was built in ArcGIS Online. This one uses Esri tooling outside the conda environment, so it's included to document the work rather than to be re-run.
 
-## Getting started
+## Full pipeline
 
-To read the project, the rendered notebooks above need no setup. To run it yourself:
+To reproduce everything from scratch, including downloading raw data:
 
 ```bash
 git clone https://github.com/REPLACE_USER/REPLACE_REPO.git
@@ -99,7 +101,7 @@ pip install -e .
 jupyter lab
 ```
 
-Then run notebooks 01–03 in order. Notebook 04 is a showcase of the ArcGIS dashboard build and isn't part of this environment. The large raw datasets are not committed — see below to obtain them.
+Then run notebooks 01–03 in order. Notebook 04 is a showcase of the ArcGIS dashboard build and isn't part of this environment. The large raw datasets are not committed - see below to obtain them.
 
 ## Data sources
 
