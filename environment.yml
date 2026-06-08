@@ -1,7 +1,7 @@
 name: obstacle-clustering
 channels:
   - conda-forge
-  - defaults
+  - nodefaults
 
 dependencies:
   # Core scientific computing
@@ -31,7 +31,3 @@ dependencies:
   - requests>=2.31
   - python-dotenv>=1.0
   - tqdm>=4.66
-
-  # Pip-only packages
-  - pip:
-    - arcgis>=2.3
