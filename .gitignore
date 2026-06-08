@@ -22,13 +22,27 @@ env/
 *.swp
 *.swo
 
-# OS
+# LaTeX build artifacts
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.bbl
+report/*.blg
+report/*.synctex.gz
+report/*.fls
+report/*.fdb_latexmk
+
+# OS / editor
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
 
 # Data (large files — keep raw data local, not in repo)
 # Uncomment if data files are too large for GitHub:
 data/raw/
+data/cached/
 
 
 # ArcGIS
