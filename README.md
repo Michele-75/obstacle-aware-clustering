@@ -19,7 +19,7 @@ For a point $\mathbf{x} = (x, y, s)$ and a centroid $\boldsymbol{\mu}$, the clus
 
 $$d^2(\mathbf{x}, \boldsymbol{\mu}) = \alpha^2\,\lVert (x,y)-(x_\mu,y_\mu) \rVert^2 \;+\; \beta^2\, d_s(s, s_\mu)^2$$
 
-where $s \in [0,1]$ is the point's position along the shoreline. We fix $\alpha = 1$ and let $\beta$ be the single dial. At $\beta = 0$ the shoreline term vanishes and the method is exactly standard k-means, so it is a strict generalization. As $\beta$ grows, position along the shore counts for more, and the clustering increasingly groups fires that share a stretch of shoreline. The shoreline distance $d_s$ is loop-aware: it measures the shorter way around the seam where $s = 0$ meets $s = 1$. The composite distance also admits an optional attribute term $\gamma$, held at zero throughout.
+where $s \in [0,1]$ is the point's position along the shoreline. We fix $\alpha = 1$ and let $\beta$ be the single dial. At $\beta = 0$ the shoreline term vanishes and the method is exactly standard k-means. As $\beta$ grows, position along the shore counts for more, and the clustering increasingly groups fires that share a stretch of shoreline. The shoreline distance $d_s$ is loop-aware: it measures the shorter way around the seam where $s = 0$ meets $s = 1$. The composite distance also admits an optional attribute term $\gamma$, held at zero throughout.
 
 The method is applied to FPA FOD wildfire records (1992–2020) around two lakes:
 
