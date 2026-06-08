@@ -9,7 +9,7 @@ Standard k-means groups points by straight-line distance, which is rarely the pr
 
 > 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185)** (ArcGIS Online)
 >
-> 📄 **[Full writeup (PDF)](obstacle-aware-kmeans.pdf)**
+> 📄 **[Full writeup (PDF)](obstacle_aware_kmeans.pdf)**
 
 ---
 
@@ -45,7 +45,7 @@ The arc-length position $s$ is found by projecting each fire onto the lake bound
 
 We choose $\beta$ by sweeping a 30-point grid and scoring each fit with the within-cluster distortion $J$ (computed at fixed unit weights so it stays comparable across the sweep). Rather than taking the grid minimum, which can be an isolated numerical spike, we keep the values that (1) have $J$ within tolerance of the minimum, (2) are stable, with at least one neighboring grid point also low- $J$, and (3) leave no cluster under 10 fires, then break the tie on smallest span. A synthetic toy problem (a thin ellipse with three point groups) confirms the feature works as designed: where straight-line distance pulls a point to the cluster on the wrong side of the obstacle, the arc-length parameter pulls it back.
 
-Full derivations, figures, and the attribute analysis are in the [writeup](obstacle-aware-kmeans.pdf).
+Full derivations, figures, and the attribute analysis are in the [writeup](obstacle_aware_kmeans.pdf).
 
 ## Repository structure
 
@@ -74,8 +74,8 @@ Full derivations, figures, and the attribute analysis are in the [writeup](obsta
 │   ├── processed/                        # cleaned fire records
 │   └── cached/                           # intermediates (not committed)
 └── report/
-    ├── obstacle-aware-kmeans.tex
-    └── obstacle-aware-kmeans.pdf
+    ├── obstacle_aware_kmeans.tex
+    └── obstacle_aware_kmeans.pdf
 ```
 
 
