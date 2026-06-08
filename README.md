@@ -2,7 +2,7 @@
 
 Standard k-means groups points by straight-line distance, which is rarely the practical distance between objects in the real world. A lake, a highway, or a mountain range can change how close two points really are. This project develops an obstacle-aware version of k-means that adds a single feature — the arc-length position of each point along a closed obstacle boundary — and weights it against ordinary spatial distance through one tunable parameter. It is applied to wildfire records around two lakes of contrasting shape.
 
-![Lake Mead near-shore: standard k-means stretches one cluster across the water; the obstacle-aware version pulls it onto a single arm](figures/mead_near_comparison.png)
+![Lake Mead near-shore: standard k-means stretches one cluster across the water; the obstacle-aware version pulls it onto a single arm](figures/mead-near-comparison.png)
 
 > 📊 **[Interactive dashboard — Lake Mead near-shore case](https://www.arcgis.com/apps/dashboards/b0a0e3a1258440ba86c61569bfea2185**) (ArcGIS Online)
 > 📄 **[Full writeup (PDF)](report/main.pdf)**
