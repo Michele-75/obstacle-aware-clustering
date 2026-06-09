@@ -106,11 +106,12 @@ jupyter lab
 Then run notebooks 01–03 in order. Notebook 04 is a showcase of the ArcGIS dashboard build and isn't part of this environment. The large raw datasets are not committed - see below to obtain them.
 
 ## Data sources
+Full details - source URLs, file formats, and the expected path for each file - are in data/README.md (data/README.md).
 
 | Source | Use |
 |--------|-----|
 | **FPA FOD** (Short, 1992–2020) | Wildfire occurrence records |
-| **NHD** (National Hydrography Dataset) | Lake boundaries — Tahoe layer 10 (Tahoe Keys region thinned); Mead layer 12 (features above 1 km² unioned, including the eastern arm NHD splits across HUC8 boundaries) |
+| **NHD** (National Hydrography Dataset) | Lake boundaries - Tahoe layer 10 (Tahoe Keys region thinned); Mead layer 12 (features above 1 km² unioned, including the eastern arm NHD splits across HUC8 boundaries) |
 | **TRPA** | Tahoe basin boundary |
 
 Boundary polygons are simplified with Douglas–Peucker (≈100 m for Tahoe, ≈450 m for Mead) and fit with a closed cubic spline before projection.
