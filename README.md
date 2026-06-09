@@ -106,7 +106,7 @@ jupyter lab
 Then run notebooks 01–03 in order. Notebook 04 is a showcase of the ArcGIS dashboard build and isn't part of this environment. The large raw datasets are not committed - see below to obtain them.
 
 ## Data sources
-Full details - source URLs, file formats, and the expected path for each file - are in [data/README.md] (data/README.md).
+Full details - source URLs, file formats, and the expected path for each file - are in [data/README.md](data/README.md).
 
 | Source | Use |
 |--------|-----|
