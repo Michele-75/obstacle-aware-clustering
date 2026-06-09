@@ -95,8 +95,8 @@ The notebooks are the core of the project. They render directly on GitHub, code 
 To reproduce everything from scratch, including downloading raw data:
 
 ```bash
-git clone https://github.com/REPLACE_USER/REPLACE_REPO.git
-cd REPLACE_REPO
+git clone https://github.com/Michele-75/obstacle-aware-clustering.git
+cd obstacle-aware-clustering
 conda env create -f environment.yml
 conda activate obstacle-clustering
 pip install -e .
