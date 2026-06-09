@@ -53,6 +53,7 @@ Full derivations, figures, and the attribute analysis are in the [writeup](repor
 .
 ├── README.md
 ├── LICENSE
+├── figures/                             # pngs to render in README
 ├── environment.yml                      # conda environment spec
 ├── pyproject.toml
 ├── src/
@@ -74,6 +75,7 @@ Full derivations, figures, and the attribute analysis are in the [writeup](repor
 │   ├── processed/                        # cleaned fire records
 │   └── cached/                           # intermediates (not committed)
 └── report/
+    ├── figures/                          # includes pngs to accompany .tex file
     ├── obstacle_aware_kmeans.tex
     └── obstacle_aware_kmeans.pdf
 ```
