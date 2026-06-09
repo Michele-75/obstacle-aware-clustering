@@ -83,7 +83,8 @@ which correctly gives $d_s(0.99, 0.01) = 0.02$ and reaches its maximum of $0.5$ 
 
 \subsection{Obstacle-aware k-means}
  
-Obstacle-aware k-means keeps the structure of standard k-means -- alternate between assigning points to the nearest centroid and updating centroids -- but changes the distance used in the assignment step. For a point $\mathbf{x} = (\text{geo}, s)$ and a centroid $\boldsymbol{\mu} = (\text{geo}_\mu, s_\mu)$,
+Obstacle-aware k-means keeps the structure of standard k-means -- alternate between assigning points to the nearest centroid, which partitions the
+fires into clusters $C_1, \dots, C_k$, and updating centroids -- but changes the distance used in the assignment step. For a point $\mathbf{x} = (\text{geo}, s)$ and a centroid $\boldsymbol{\mu} = (\text{geo}_\mu, s_\mu)$,
 \begin{equation}
 d^2(\mathbf{x}, \boldsymbol{\mu})
 = \alpha^2 \, \big\lVert \text{geo} - \text{geo}_\mu \big\rVert^2
@@ -96,13 +97,19 @@ The update step for each centroid takes a small modification on the $s$ componen
 \[
 (x_{\mu_c},\, y_{\mu_c}) = \frac{1}{|C_c|} \sum_{i \in C_c} (x_i,\, y_i),
 \]
-but the arc-length part cannot be averaged directly without misbehaving at the seam. Instead we compute it by projecting the planar mean back onto the boundary:
+but the arc-length part cannot be averaged directly without misbehaving at the seam. Instead we project each member onto the boundary, average those projected
+positions, and project the average back onto the boundary to get $s_{\mu_c}$:
 \[
-s_{\mu_c} = s\big( (x_{\mu_c}, y_{\mu_c}) \big).
+s_{\mu_c} = s\!\left( \frac{1}{|C_c|} \sum_{i \in C_c} \big( x(t_i),\, y(t_i) \big) \right),
 \]
-The centroid's shoreline position is then the arc length of its mean location, consistent with how points get their $s$ values in the first place.
+where $t_i$ is the parameter at which member $i$ projects onto the boundary, so
+$\big(x(t_i), y(t_i)\big)$ is that member's position on the shoreline, and $s(\cdot)$
+projects its argument back onto the boundary and returns the normalized arc length.
+The centroid's shoreline position is the arc length of this reprojected average of
+its members' shoreline positions, consistent with how points get their $s$ values in
+the first place.
 
-The algorithm iterates these assignment and update steps to convergence. We seed it with a variant of k-means++ adapted to the same composite distance: the first centroid is drawn uniformly at random, and each subsequent centroid is sampled with probability proportional to $d^2$ in \eqref{eq:composite} from the nearest existing centroid. Every run in this report uses a fixed random seed, so the initializations, cluster sizes, and iteration counts reproduce exactly.
+The algorithm iterates these assignment and update steps to convergence. We seed it with a variant of k-means++ adapted to the same composite distance: the first centroid is drawn uniformly at random, and each subsequent centroid is sampled with probability proportional to $d^2$ in \eqref{eq:composite} from the nearest existing centroid. All runs in this report use fixed random seeds, so the initializations, cluster sizes, and iteration counts reproduce exactly.
  
 \subsection{The arc-length span: measuring shoreline tightness}
 \label{sec:span}
@@ -180,7 +187,7 @@ The feature vector for each point is $(x_{\text{scaled}}, y_{\text{scaled}}, s)$
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/toy_comparison.png}
-\caption{Standard k-means (top) misassigns one point at the right tip of the ellipse, where straight-line distance pulls a south-east point into the north-east cluster. Obstacle-aware k-means (bottom) recovers the correct grouping. The two algorithms differ only in their distance metric; the data, the number of clusters, and the initialization scheme are identical.}
+\caption{Standard k-means (top) misassigns one point at the right tip of the ellipse, where straight-line distance pulls a south-east point into the north-east cluster. Obstacle-aware k-means (bottom) recovers the correct grouping. The two algorithms both use k-means++ and $k=3$ on the same data; the obstacle-aware version adds the $s$ term to the distance.}
 \label{fig:toy-comparison}
 \end{figure}
  
@@ -323,7 +330,7 @@ The three clusterings run on all 844 fires, with the same setup as Tahoe.
 Standard k-means on scaled $(x, y)$ converges in 7 iterations and produces four clusters with sizes 185, 124, 273, and 262 fires. The mean arc-length span is $0.3412$, or about 234.1 km of shoreline per cluster on average. That number is much larger than Tahoe's 31 km, mostly because Mead's perimeter is $\sim 6\times$ longer. Each Mead cluster covers about a third of a $\sim686$ km shoreline.
  
 \paragraph{Obstacle-aware at equal weights.}
-Adding $s$ as a clustering feature with $\beta = 1$ produces a clustering identical to standard k-means: the per-cluster spans are exactly the same, and the mean span comes out at $0.3412$ (234.1 km), a $0.0\%$ change. At this weighting the shoreline term is not strong enough to push any fires across cluster boundaries on Mead's basin-scale data; the clustering reorganizes only once $\beta$ is tuned higher.
+Adding $s$ as a clustering feature with $\beta = 1$ produces a clustering almost identical to standard k-means: the per-cluster spans and mean are exactly the same ($0.0\%$), and only a single fire shifts between two clusters. At this weighting, the shoreline term is not strong enough to have any meaningful impact on cluster boundaries; the clustering reorganizes only once $\beta$ is tuned higher.
  
 \paragraph{Obstacle-aware at optimized $\beta$.}
 The $\beta$ sweep runs a 30-point grid from $\beta = 0.05$ to $\beta = 2.0$. Figure~\ref{fig:mead-basin-sweep} shows $J$ and span across the grid.
