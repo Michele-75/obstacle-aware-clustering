@@ -40,7 +40,7 @@ Standard k-means groups points by straight-line distance, which is rarely the pr
  
 Clustering is one of the most common tools in spatial data analysis. Given a set of points scattered across a region, k-means groups them into $k$ clusters by minimizing distance to a set of centers. The notion of distance is the ordinary straight line between two coordinates, and on open terrain this works well. But the practical distance between two objects in the real world is rarely a straight line. Roads bend around terrain, ecological barriers separate populations, highways and rivers cut neighborhoods in half, and a lake puts water between two points that look close on a map.
  
-This matters whenever a clustering result is going to be used. Suppose we are trying to place firefighter stations at central locations for the fire hotspots around a lake. The center of a cluster, in straight-line terms, can sit on the wrong side of the water from many of the fires it nominally represents. The same issue appears in placing disaster response teams near sources of danger, in studying species separated by a physical barrier, in urban planning around major roadways, and in dispersing resources efficiently across a region. In each case, the clustering should reflect distances along travelable paths rather than across barriers. Standard k-means cannot make that distinction. Two points on opposite sides of a lake look as close as two points on the same shoreline.
+This matters whenever a clustering result is going to be used. Suppose we are trying to place firefighter stations at central locations for the fire hotspots around a lake. The center of a cluster, in straight-line terms, can sit on the opposite side of the water from many of the fires it nominally represents. The same issue appears in placing disaster response teams near sources of danger, in studying species separated by a physical barrier, in urban planning around major roadways, and in dispersing resources efficiently across a region. In each case, the clustering should reflect distances along traversable paths rather than across barriers. Standard k-means cannot make that distinction. Two points on opposite sides of a lake look as close as two points on the same shoreline.
  
 This report develops a version of k-means that addresses the barrier case for a closed boundary curve, and applies it to wildfire data around two lakes. A lake is a useful first case because the obstacle is bounded, has a well-defined shape, and is large enough to genuinely change which points are practically close to which others, but not so large that it carves the surrounding region into entirely separate worlds. Wildfires are a natural choice of point data because they have real safety and resource-allocation stakes: response stations should sit central to where fires actually occur, in terms of driving distance rather than straight-line distance.
  
@@ -102,7 +102,7 @@ s_{\mu_c} = s\big( (x_{\mu_c}, y_{\mu_c}) \big).
 \]
 The centroid's shoreline position is then the arc length of its mean location, consistent with how points get their $s$ values in the first place.
 
-The algorithm iterates these assignment and update steps to convergence. We seed it with a variant of k-means++ adapted to the same composite distance: the first centroid is drawn uniformly at random, and each subsequent centroid is sampled with probability proportional to the squared $d^2$ in \eqref{eq:composite} from the nearest existing centroid.
+The algorithm iterates these assignment and update steps to convergence. We seed it with a variant of k-means++ adapted to the same composite distance: the first centroid is drawn uniformly at random, and each subsequent centroid is sampled with probability proportional to $d^2$ in \eqref{eq:composite} from the nearest existing centroid. Every run in this report uses a fixed random seed, so the initializations, cluster sizes, and iteration counts reproduce exactly.
  
 \subsection{The arc-length span: measuring shoreline tightness}
 \label{sec:span}
@@ -163,7 +163,7 @@ Running standard k-means (initialized by k-means$++$) with $k = 3$ on the raw $(
  
 \subsection{The arc-length parameter on this problem}
  
-To add the arc-length parameter, project each point onto the ellipse and compute $s$ as described in Section~\ref{sec:method}. The values trace the loop counter-clockwise from the rightmost tip: the north-east points get $s$ between roughly $0.05$ and $0.22$, the south-east points between roughly $0.77$ and $0.95$, and the west points sit near $s = 0.5$. The two groups whose $(x, y)$ values overlap, north-east and south-east, are now cleanly separated in $s$: a point at $s = 0.08$ and a point at $s = 0.92$ are at the maximum loop distance of $0.5$ apart, exactly the kind of separation the new feature was designed to encode.
+To add the arc-length parameter, project each point onto the ellipse and compute $s$ as described in Section~\ref{sec:method}. The values trace the loop counter-clockwise from the rightmost tip: the north-east points get $s$ between roughly $0.05$ and $0.22$, the south-east points between roughly $0.77$ and $0.95$, and the west points sit near $s = 0.5$. The two groups whose $(x, y)$ values overlap, north-east and south-east, are now cleanly separated in $s$.
  
 \begin{figure}[H]
 \centering
@@ -193,7 +193,7 @@ The toy problem demonstrates that the arc-length parameter does what it was desi
 \label{sec:tahoe}
 %==============================================================
  
-Lake Tahoe sits on the California-Nevada border in the Sierra Nevada, a single roughly oval basin about 35 km long and 19 km wide. Tahoe makes a good test case because is one closed body of water with a compact shape and a well-defined regulatory boundary around it for selecting fires. The analysis runs at two scales: the basin scale uses every fire inside the Tahoe basin boundary (1,068 fires over 28 years), and the near-shore scale uses only the fires within 1 km of the shoreline.
+Lake Tahoe sits on the California-Nevada border in the Sierra Nevada, a single roughly oval basin about 35 km long and 19 km wide. Tahoe makes a good test case because it is one closed body of water with a compact shape and a well-defined regulatory boundary around it for selecting fires. The analysis runs at two scales: the basin scale uses every fire inside the Tahoe basin boundary (1,068 fires over 29 years), and the near-shore scale uses only the fires within 1 km of the shoreline.
 
 \subsection{Data and boundary}
  
@@ -203,7 +203,7 @@ The shoreline polygon comes from the USGS National Hydrography Dataset~\cite{nhd
  
 \subsection{Projecting fires onto the shoreline}
  
-Each of the 1,068 fires is projected onto the boundary spline using the procedure from Section~\ref{sec:method}, yielding both its spline parameter $t$ and its arc-length position $s \in [0,1]$. The full range of $s$ is covered, $0.007$ to $0.998$, so the fires touch essentially every stretch of shoreline.
+Each of the 1,068 fires is projected onto the boundary spline using the procedure from Section~\ref{sec:method}, yielding both its spline parameter $t$ and its arc-length position $s \in [0,1]$. The full range of $s$ is covered, $0.007$ to $0.998$, so the fires touch essentially every stretch of shoreline (see Figure~\ref{fig:tahoe-s}).
  
 \begin{figure}[H]
 \centering
@@ -214,7 +214,7 @@ Each of the 1,068 fires is projected onto the boundary spline using the procedur
  
 \subsection{Choosing the number of clusters}
  
-The number of clusters $k$ is held fixed across both lakes for a controlled comparison. The value $k = 4$ comes from the elbow method run on Tahoe's basin coordinates, sweeping $k$ from 2 to 8 and plotting the inertia (within-cluster sum of squared distances) at each.
+The number of clusters $k$ is held fixed across both lakes for a controlled comparison. The value $k = 4$ comes from the elbow method run on Tahoe's basin coordinates, sweeping $k$ from 2 to 8 and plotting the inertia (within-cluster sum of squared distances) at each (see Figure~\ref{fig:tahoe-elbow}).
  
 \begin{figure}[H]
 \centering
@@ -229,13 +229,13 @@ The number of clusters $k$ is held fixed across both lakes for a controlled comp
 Three clusterings are run on the full basin of 1,068 fires, each producing four clusters: standard k-means as the baseline ($\beta = 0$), obstacle-aware k-means at equal weights ($\beta = 1$), and obstacle-aware k-means at an optimized $\beta$ chosen by the procedure described below. The headline metric for each is the mean arc-length span, defined in Section~\ref{sec:span}.
  
 \paragraph{Standard k-means (baseline).}
-Standard k-means on scaled $(x, y)$ converges in 10 iterations and produces four spatially compact clusters with sizes 305, 230, 223, and 310 fires. The mean arc-length span is $\overline{\text{span}}_{\text{std}} = 0.2650$, or about 31.3 km of shoreline per cluster on average. This is the number every obstacle-aware variant is measured against.
+Standard k-means on scaled $(x, y)$ converges in 10 iterations and produces four spatially compact clusters with sizes 305, 230, 223, and 310 fires. The mean arc-length span is $\overline{\text{span}}_{\text{standard}} = 0.2650$, or about 31.3 km of shoreline per cluster on average. This is the number every obstacle-aware variant is measured against.
  
 \paragraph{Obstacle-aware at equal weights.}
 Adding $s$ as a clustering feature with $\beta = 1$ converges in 13 iterations and produces a clustering of broadly similar shape: cluster sizes shift slightly to 305, 236, 216, and 311. The mean span drops to $0.2475$ (about 29.3 km), an improvement of $6.6\%$ over standard k-means. Although equal weights is not a tuned choice, it already extracts most of what the obstacle parameter has to offer at this scale.
  
 \paragraph{Obstacle-aware at optimized $\beta$.}
-The $\beta$ sweep runs the model at 30 values of $\beta$ from 0.05 to 2.5, recording both the objective $J$ and the mean span at each. Figure~\ref{fig:tahoe-basin-sweep} shows the two on a shared $\beta$ axis.
+The $\beta$ sweep runs the model at 30 values of $\beta$ from 0.05 to 2.5, recording both the objective $J$ \eqref{eq:objective} and the mean span at each. Figure~\ref{fig:tahoe-basin-sweep} shows the two on a shared $\beta$ axis.
  
 \begin{figure}[H]
 \centering
@@ -268,7 +268,7 @@ The near-shore subset asks how the method behaves when fires are concentrated ri
 The 1 km threshold is chosen to give a fraction of fires similar to Lake Mead's near-shore subset (which uses 5 km to keep $\approx 25\%$ of its fires).
  
 \paragraph{Three methods on the subset.}
-The same three clusterings run on the 296-fire subset. Standard k-means converges in 5 iterations with sizes 93, 71, 51, and 81 and a mean span of $0.2246$ (about 26.6 km). Equal weights converges in 9 iterations with sizes 94, 51, 71, 80 and a mean span of $0.2261$ -- slightly \emph{worse} than standard k-means by 0.6\%. The $\beta$ sweep selects $\beta = 0.86$, which sits in a wide stable low-$J$ region; refitting produces cluster sizes identical to standard k-means (93, 71, 51, 81) and a mean span of $0.2246$ (26.6 km), recovering standard k-means exactly.
+The same three clusterings run on the 296-fire subset. Standard k-means converges in 5 iterations with sizes 93, 71, 51, and 81 and a mean span of $0.2246$ (about 26.6 km). Equal weights converges in 9 iterations with sizes 94, 51, 71, 80 and a mean span of $0.2261$ -- slightly \emph{worse} than standard k-means by 0.7\%. A $\beta$ sweep of 30 points from 0.05 to 2.0 selects $\beta = 0.86$, which sits in a wide stable low-$J$ region; refitting produces cluster sizes identical to standard k-means (93, 71, 51, 81) and a mean span of $0.2246$ (26.6 km), recovering standard k-means exactly.
  
 Figure~\ref{fig:tahoe-near-compare} shows the three panels.
  
@@ -287,7 +287,7 @@ Across the two scales, Tahoe gives a clean but limited result. The obstacle para
  
 The pattern is the opposite of what one might guess. The arc-length parameter was built around the obstacle, so it is tempting to expect it to matter most right next to the obstacle. But near the shore, a fire's position around the lake is almost entirely determined by its $(x, y)$ coordinates: a thin ring of fires makes $s$ nearly redundant with the coordinates, so adding $s$ adds little new information. Across the full basin, fires sit at varying distances from the lake, and a distant fire's $(x, y)$ position does not pin down which stretch of shoreline it belongs to, so $s$ carries information the coordinates do not.
  
-Now, we will switch our obstacle boundary to Lake Mead, whose multi-arm geometry tells a very different story near the shore.
+Now, we switch to Lake Mead, whose multi-arm geometry tells a very different story near the shore.
 
 %==============================================================
 \section{Case Study: Lake Mead}
@@ -305,7 +305,7 @@ The unioned polygon has 74,403 vertices, much finer than the clustering needs. S
  
 \subsection{Projecting fires onto the shoreline}
  
-Each of the 844 fires is projected onto the boundary spline, yielding its arc-length position $s \in [0,1]$. The values cover the full range, $0.011$ to $0.988$, so fires touch every stretch of shoreline.
+Each of the 844 fires is projected onto the boundary spline, yielding its arc-length position $s \in [0,1]$. The values cover the full range, $0.011$ to $0.988$, so fires touch every stretch of shoreline (see Figure~\ref{fig:mead-s}).
  
 \begin{figure}[H]
 \centering
@@ -320,13 +320,13 @@ Each of the 844 fires is projected onto the boundary spline, yielding its arc-le
 The three clusterings run on all 844 fires, with the same setup as Tahoe.
  
 \paragraph{Standard k-means (baseline).}
-Standard k-means on scaled $(x, y)$ converges in 7 iterations and produces four clusters with sizes 185, 124, 273, and 262 fires. The mean arc-length span is $0.3412$, or about 234.1 km of shoreline per cluster on average. That number is much larger than Tahoe's 31 km -- not because Mead's clusters are looser as a fraction of the loop (Tahoe's was $0.265$ vs Mead's $0.341$), but because the loop itself is so much longer. Each Mead cluster covers about a third of a 690 km shoreline.
+Standard k-means on scaled $(x, y)$ converges in 7 iterations and produces four clusters with sizes 185, 124, 273, and 262 fires. The mean arc-length span is $0.3412$, or about 234.1 km of shoreline per cluster on average. That number is much larger than Tahoe's 31 km, mostly because Mead's perimeter is $\sim 6\times$ longer. Each Mead cluster covers about a third of a $\sim686$ km shoreline.
  
 \paragraph{Obstacle-aware at equal weights.}
 Adding $s$ as a clustering feature with $\beta = 1$ produces a clustering identical to standard k-means: the per-cluster spans are exactly the same, and the mean span comes out at $0.3412$ (234.1 km), a $0.0\%$ change. At this weighting the shoreline term is not strong enough to push any fires across cluster boundaries on Mead's basin-scale data; the clustering reorganizes only once $\beta$ is tuned higher.
  
 \paragraph{Obstacle-aware at optimized $\beta$.}
-The $\beta$ sweep runs the same 30-point grid from $\beta = 0.05$ to $\beta = 2.0$. Figure~\ref{fig:mead-basin-sweep} shows $J$ and span across the grid.
+The $\beta$ sweep runs a 30-point grid from $\beta = 0.05$ to $\beta = 2.0$. Figure~\ref{fig:mead-basin-sweep} shows $J$ and span across the grid.
  
 \begin{figure}[H]
 \centering
@@ -359,7 +359,7 @@ The near-shore subset uses a 5 km threshold, chosen to keep about $25\%$ of the 
 \paragraph{Three methods on the subset.}
 Standard k-means converges in 3 iterations with very uneven cluster sizes -- 126, 16, 40, and 32 fires -- and a mean span of $0.2425$ (about 166.4 km).
  
-Equal weights converges in 8 iterations with sizes 33, 126, 40, and 15, and a mean span of $0.2204$ (151.2 km). That is a $9.1\%$ improvement over standard k-means -- already substantial, and much better than Tahoe's near-shore equal-weights result, which actually made things slightly worse.
+Equal weights converges in 8 iterations with sizes 33, 126, 40, and 15, and a mean span of $0.2204$ (151.2 km). That is a $9.1\%$ improvement over standard k-means -- already substantial, and much better than Tahoe's near-shore equal-weights result, which actually made clusters slightly looser.
  
 The $\beta$ sweep shows where the obstacle-aware version finds further room to tighten (Figure~\ref{fig:mead-near-sweep}).
  
@@ -372,7 +372,7 @@ The $\beta$ sweep shows where the obstacle-aware version finds further room to t
  
 The selection works through both filters here. The lowest-$J$ point on the grid is $\beta = 0.59$, but $J$ at that $\beta$ is an isolated spike: the neighbors on either side jump to much higher $J$, so the clustering at $\beta = 0.59$ only holds at that exact weighting. The lowest-span solutions in that low-$\beta$ region also have a cluster collapsed to a handful of fires (under the 10-fire floor), so the cluster-size constraint applies as well. Both filters point toward the stable region past $\beta \approx 1.0$, where the selection lands at $\beta = 1.19$.
  
-Refitting at $\beta = 1.19$ gives cluster sizes 34, 126, 14, and 40, and a mean span of $0.1964$ (about 134.8 km). That is a $19.0\%$ improvement over standard k-means, the largest gain of any case in the project.
+Refitting at $\beta = 1.19$ gives cluster sizes 34, 126, 14, and 40, and a mean span of $0.1964$ (about 134.8 km). That is a $19.0\%$ improvement over standard k-means, the largest gain of any case in the project. Whether these uneven clusters are useful in practice is a question for a future version (see Section~\ref{sec:method-refine}).
  
 \paragraph{Comparison.}
 Figure~\ref{fig:mead-near-compare} shows the three clusterings.
@@ -380,7 +380,7 @@ Figure~\ref{fig:mead-near-compare} shows the three clusterings.
 \begin{figure}[H]
 \centering
 \makebox[\textwidth]{\includegraphics[width=.8\textwidth]{figures/mead_near_three_methods.png}}
-\caption{Lake Mead near-shore: the standard k-means clustering (left) splits the data unevenly, with the green cluster reaching across the water rather than following one stretch of shore. Both obstacle-aware versions pull the green cluster onto a single arm, splitting the eastern shoreline cleanly between the northeastern (green) and southeastern (red) arms. The improvement comes almost entirely from the green cluster, which tightens from a span of $0.42$ under standard k-means to about $0.24$ under both obstacle-aware variants.}
+\caption{Lake Mead near-shore: the standard k-means clustering (top) splits the data unevenly, with Clusters 1 and 3 reaching across the water rather than following one stretch of shore. The optimized obstacle-aware clustering (bottom) pulls Cluster 3 onto a single side, splitting the eastern shoreline cleanly between the northeastern (Cluster 3) and southeastern (Cluster 1) shores.}
 \label{fig:mead-near-compare}
 \end{figure}
  
@@ -479,7 +479,7 @@ The number of clusters was held at $k = 4$ across both lakes for a controlled co
 
 The Mead near-shore clusters are small and uneven, with three of the four holding between 14 and 40 fires. This limits the statistical power of the attribute tests in Section~\ref{sec:attributes} and also limits how useful the clusters would be in practice, since a real fire station network would likely want roughly even coverage rather than a handful of stations handling most of the fires. The existing size floor only rules out truly degenerate clusters; an extension that targets evenness directly -- a balance penalty in the objective, or a balanced-k-means variant -- would be needed to fix this.
 
-Boundary processing involves choices that were not systematically varied: the Douglas-Peucker simplification tolerance, the choice of cubic spline over alternative smooth curves, and lake-specific edits to the raw boundary polygon all matter for projection and span. Each was justified case-by-case rather than tested across alternatives.
+Boundary processing involves choices that were not systematically varied: the source NHD layer, the Douglas-Peucker simplification tolerance, the choice of cubic spline over alternative smooth curves, and lake-specific edits to the raw polygon all matter for projection and span. Two of these also differ between the lakes -- Tahoe's shoreline came from the small-scale (generalized) NHD layer and Mead's from the large-scale (high-resolution) layer, so the boundaries begin at different native resolutions. A more controlled version would draw both from the same high-resolution layer under a common simplification rule, so that any remaining difference in fidelity reflects the method rather than the data source.
 
 Finally, the clustering used only location. As sketched in Section~\ref{sec:attributes}, including attributes would let the method trade between shoreline cohesion and attribute distinctness. The composite distance \eqref{eq:composite} already accommodates a third weighted term ($\gamma$, held at zero throughout); extending the $\beta$-selection procedure to a two-dimensional $(\beta, \gamma)$ grid with a combined objective is a direct generalization of what was done here.
  
